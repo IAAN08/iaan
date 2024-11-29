@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Tile Pattern</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <style>
+        /* 버튼 컨테이너 */
+        .button-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        /* 버튼 스타일 */
+        .back-button, .refresh-button {
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            background-color: #ffffff;
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 70px; /* 둥근 버튼 */
+            width: 70px;
+            height: 70px; /* 버튼 크기 조정 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button:hover, .refresh-button:hover {
+            background-color: #f0f0f0; /* 호버 효과 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 버튼 컨테이너 -->
+    <div class="button-container">
+        <button class="back-button" onclick="goToHome()">←</button>
+        <button class="refresh-button" onclick="refreshPage()">↺</button>
+    </div>
+
+    <script>
+        let tileSize = 50;
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            noLoop(); // 한 번만 그리기
+        }
+
+        function draw() {
+            for (let x = 0; x < width; x += tileSize) {
+                for (let y = 0; y < height; y += tileSize) {
+                    let col = color(random(255), random(255), random(255));
+                    fill(col);
+                    stroke(0);
+                    strokeWeight(2);
+
+                    let choice = int(random(3));
+                    if (choice === 0) {
+                        rect(x, y, tileSize, tileSize);
+                    } else if (choice === 1) {
+                        ellipse(x + tileSize / 2, y + tileSize / 2, tileSize, tileSize);
+                    } else {
+                        triangle(x, y, x + tileSize, y, x + tileSize / 2, y + tileSize);
+                    }
+                }
+            }
+        }
+
+        function mousePressed() {
+            redraw(); // 클릭 시 새 패턴 생성
+        }
+
+        function goToHome() {
+            window.location.href = 'index.html'; // 초기 화면 URL로 이동
+        }
+
+        function refreshPage() {
+            location.reload(); // 현재 페이지 새로고침
+        }
+    </script>
+</body>
+</html>

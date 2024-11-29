@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Star Generator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #000000;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        .button-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        .back-button, .refresh-button {
+            padding: 10px 20px;
+            font-size: 2rem;
+            background-color: #ffcbe4;
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 70px; /* 둥근 버튼 */
+            width: 70px;
+            height: 70;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+
+        .back-button:hover, .refresh-button:hover {
+            background-color: #ff2990;
+        }
+
+        .refresh-button {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <a href="index.html" class="back-button">←</a>
+        <button class="refresh-button" onclick="location.reload();">⟳</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <script>
+        let stars = [];
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            background(0);
+        }
+
+        function draw() {
+            background(0, 20); // 잔상 효과
+
+            for (let star of stars) {
+                push();
+                translate(star.x, star.y);
+                rotate(frameCount / 50.0);
+                stroke(random(255), random(255), random(255));
+                strokeWeight(2);
+                noFill();
+
+                // 별 그리기
+                beginShape();
+                for (let a = 0; a < TWO_PI; a += PI / 5) {
+                    let r = 10;
+                    let x = cos(a) * r;
+                    let y = sin(a) * r;
+                    vertex(x, y);
+                }
+                endShape(CLOSE);
+                pop();
+            }
+
+            if (stars.length > 20) {
+                stars.splice(0, 1); // 오래된 별 제거
+            }
+        }
+
+        function mousePressed() {
+            stars.push({ x: mouseX, y: mouseY });
+        }
+    </script>
+</body>
+</html>

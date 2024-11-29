@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love will come true if you draw a heart</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 0.1rem;
+            color: #e83a8e;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+
+        canvas {
+            border: 2px solid #898989;
+            margin-bottom: 2rem;
+        }
+
+        .back-button {
+    position: absolute; /* 절대 위치 지정 */
+    bottom: 20px; /* 화면 아래에서 20px 위로 띄움 */
+    left: 50%; /* 가로 중앙 정렬 */
+    transform: translateX(-50%); /* 가로 중앙 정렬 보정 */
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    background-color: #ffcbe4;
+    color: rgb(0, 0, 0);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.back-button:hover {
+    background-color: #ff2990;
+}
+
+    </style>
+</head>
+<body>
+    <h1>Love will come true</h1>
+    <p>Move your mouse to fill it with hearts.</p>
+
+    <!-- p5.js 캔버스가 여기에 표시됩니다 -->
+    <div id="p5-canvas"></div>
+
+    <a href="index.html" class="back-button">BACK</a>
+
+    <!-- p5.js 라이브러리 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+
+    <!-- p5.js 코드 -->
+    <script>
+        function setup() {
+            // 캔버스 생성
+            let canvas = createCanvas(500, 500);
+            canvas.parent('p5-canvas'); // 캔버스를 특정 div에 연결
+
+            // 배경 설정
+            background(200, 220, 255);
+        }
+
+        function setup() {
+    createCanvas(400, 400); // 캔버스 크기 설정
+    background(200, 220, 255); // 초기 배경색 설정
+}
+
+function draw() {
+    // 하트 모양을 그릴 색상
+    fill(255, 100, 150, 50);
+    noStroke(); // 테두리 없애기
+
+    // 하트 중심 위치를 마우스 위치로 설정
+    let x = mouseX;
+    let y = mouseY;
+
+   // 하트 모양 그리기
+beginShape();
+vertex(x, y); // 하트의 아래쪽 점
+bezierVertex(x - 70, y - 50, x - 70, y - 150, x, y - 100); // 왼쪽 커브
+bezierVertex(x + 70, y - 150, x + 70, y - 50, x, y); // 오른쪽 커브
+endShape(CLOSE);
+}
+
+
+    </script>
+</body>
+</html>

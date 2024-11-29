@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Balloon Pop Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f9f9f9;
+        }
+
+        canvas {
+            border: 2px solid #898989;
+        }
+
+        .button-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        .back-button, .refresh-button {
+            padding: 10px 20px;
+            font-size: 2rem;
+            background-color: #ffcbe4;
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 70px; /* 둥근 버튼 */
+            width: 70px;
+            height: 70;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .back-button:hover, .refresh-button:hover {
+            background-color:#ff2990 ;
+        }
+
+        .refresh-button {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Balloon Pop Game</h1>
+    <p>Click the balloons to pop them!</p>
+
+    <div id="p5-canvas"></div>
+
+    <div class="button-container">
+        <a href="index.html" class="back-button">←</a>
+        <button class="refresh-button" onclick="location.reload();">⟳</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <script>
+        let balloons = [];
+        let score = 0;
+        let gameClear = false;
+
+        function setup() {
+            let canvas = createCanvas(700, 500);
+            canvas.parent('p5-canvas');
+            for (let i = 0; i < 10; i++) {
+                balloons.push({ 
+                    x: random(width), 
+                    y: random(height), 
+                    size: random(50, 70), 
+                    originalSize: random(50, 70) 
+                });
+            }
+        }
+
+        function draw() {
+            background(200, 220, 255);
+
+            if (balloons.length === 0) {
+                gameClear = true;
+                textSize(50);
+                fill(255);
+                textAlign(CENTER, CENTER);
+                text("CLEAR!", width / 2, height / 2);
+                noLoop(); // 게임 종료
+                return;
+            }
+
+            for (let balloon of balloons) {
+                // 마우스 호버 시 커지기
+                let d = dist(mouseX, mouseY, balloon.x, balloon.y);
+                if (d < balloon.size / 2) {
+                    balloon.size = balloon.originalSize * 1.2; // 커짐
+                } else {
+                    balloon.size = balloon.originalSize; // 원래 크기
+                }
+
+                fill(255, 0, 0);
+                ellipse(balloon.x, balloon.y, balloon.size);
+            }
+
+            fill(0);
+            textSize(24);
+            text(`Score: ${score}`, 10, 30);
+        }
+
+        function mousePressed() {
+            for (let i = balloons.length - 1; i >= 0; i--) {
+                let d = dist(mouseX, mouseY, balloons[i].x, balloons[i].y);
+                if (d < balloons[i].size / 2) {
+                    balloons.splice(i, 1); // 풍선 제거
+                    score++;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

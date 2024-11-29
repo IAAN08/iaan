@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Curves</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <style>
+        .button-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        .back-button, .refresh-button {
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            background-color: #ffffff;
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 70px;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button:hover, .refresh-button:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <button class="back-button" onclick="goToHome()">←</button>
+        <button class="refresh-button" onclick="refreshPage()">↺</button>
+    </div>
+    <script>
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            frameRate(10);
+        }
+
+        function draw() {
+            noFill();
+            stroke(random(255), random(255), random(255), 150);
+            strokeWeight(2);
+            beginShape();
+            for (let i = 0; i < 10; i++) {
+                curveVertex(random(width), random(height));
+            }
+            endShape();
+        }
+
+        function goToHome() {
+            window.location.href = 'index.html';
+        }
+
+        function refreshPage() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>

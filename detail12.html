@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Circles with Trail</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <style>
+        .button-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        .back-button, .refresh-button {
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            background-color: #ffffff;
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 70px;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .back-button:hover, .refresh-button:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <button class="back-button" onclick="goToHome()">←</button>
+        <button class="refresh-button" onclick="refreshPage()">↺</button>
+    </div>
+    <script>
+        let circles = [];
+        let trailCount = 10;
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            noStroke();
+            for (let i = 0; i < trailCount; i++) {
+                circles.push({ x: mouseX, y: mouseY });
+            }
+        }
+
+        function draw() {
+            background(240, 240, 255);
+            
+            // 새로운 색상 및 크기 계산
+            let size = map(mouseX, 0, width, 10, 100);
+            let r = map(mouseX, 0, width, 0, 255);
+            let g = map(mouseY, 0, height, 0, 255);
+            let b = map(mouseX + mouseY, 0, width + height, 0, 255);
+
+            // 새 원 위치를 배열에 추가
+            circles.push({ x: mouseX, y: mouseY });
+
+            // trailCount만큼 유지
+            if (circles.length > trailCount) {
+                circles.shift();
+            }
+
+            // 원 그리기
+            for (let i = 0; i < circles.length; i++) {
+                let alpha = map(i, 0, circles.length, 50, 255); // 알파값 증가
+                let circleSize = size * (1 - i / circles.length); // 크기 감소
+                fill(r, g, b, alpha);
+                ellipse(circles[i].x, circles[i].y, circleSize);
+            }
+        }
+
+        function goToHome() {
+            window.location.href = 'index.html';
+        }
+
+        function refreshPage() {
+            location.reload();
+        }
+    </script>
+</body>
+</html>

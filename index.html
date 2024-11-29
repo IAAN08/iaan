@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Image Animation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-size: cover; /* 배경 이미지를 화면에 맞게 조정 */
+        }
+    
+        /* 첫 번째 화면 스타일 */
+        #startScreen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-image: url('image/background.jpg'); /* 배경 이미지 추가 */
+            background-size: cover; /* 배경 이미지를 화면 크기에 맞춤 */
+            background-position: center; /* 배경 이미지 중앙 정렬 */
+            background-repeat: no-repeat; /* 배경 이미지 반복 방지 */
+        }
+    
+        #startScreen img {
+            width: 350px;
+            transition: transform 0.3s ease;
+        }
+    
+        #startScreen img:hover {
+            transform: scale(1.2);
+        }
+    
+        /* 텍스트 애니메이션 */
+        .animated-text {
+            position: absolute;
+            top: 20px; /* 화면 상단에 위치 */
+            left: 45%; /* 초기 위치 */
+            white-space: nowrap;
+            font-size: 1.5rem;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+            color: #ffffff;
+            animation: scrollText 18s linear infinite; /* 무한 반복 */
+            z-index: 1; /* 텍스트가 다른 요소 위에 표시되도록 설정 */
+        }
+    
+        @keyframes scrollText {
+            0% {
+                transform: translateX(100%); /* 텍스트가 화면 오른쪽 밖에서 시작 */
+            }
+            100% {
+                transform: translateX(-200%); /* 텍스트가 화면 왼쪽 밖으로 나감 */
+            }
+        }
+    
+        /* 전환 시 애니메이션 정지를 위한 클래스 추가 */
+        .hidden {
+            animation: none; /* 애니메이션 비활성화 */
+            display: none; /* 텍스트 숨기기 */
+        }
+    
+        /* 두 번째 화면 스타일 */
+        #secondScreen {
+            display: none;
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            background-color: rgb(255);
+        }
+    
+        .image {
+            position: absolute;
+            width: 360px;
+            transition: transform 0.3s ease; /* 호버 효과를 부드럽게 */
+        }
+    
+        .image:hover {
+            transform: scale(1.2); /* 마우스 호버 시 크기 증가 */
+        }
+    </style>
+    
+</head>
+<body>
+    <!-- 첫 번째 화면 -->
+    <div id="startScreen">
+        <div class="animated-text">
+            A lottery ball that randomly shows interesting things! Press the start button.
+        </div>
+        <img src="image/start.png" alt="start Image" id="startImage">
+    </div>
+
+    <!-- 두 번째 화면 -->
+    <div id="secondScreen">
+        <!-- 13개의 이미지 추가 -->
+        <img src="image/1.png" class="image">
+        <img src="image/2.png" class="image">
+        <img src="image/3.png" class="image">
+        <img src="image/4.png" class="image">
+        <img src="image/5.png" class="image">
+        <img src="image/6.png" class="image">
+        <img src="image/7.png" class="image">
+        <img src="image/8.png" class="image">
+        <img src="image/9.png" class="image">
+        <img src="image/10.png" class="image">
+        <img src="image/11.png" class="image">
+        <img src="image/12.png" class="image">
+        <img src="image/13.png" class="image">
+    </div>
+
+    <script>
+        // 첫 번째 화면의 이미지 클릭 이벤트
+        const startImage = document.getElementById('startImage');
+        const startScreen = document.getElementById('startScreen');
+        const secondScreen = document.getElementById('secondScreen');
+        const images = document.querySelectorAll('.image');
+    
+        startImage.addEventListener('click', () => {
+            startScreen.style.display = 'none';
+            secondScreen.style.display = 'block';
+    
+            // 이미지 초기 위치와 속도 설정
+            images.forEach((img) => {
+                const randomX = Math.random() * window.innerWidth;
+                const randomY = Math.random() * window.innerHeight;
+                const velocityX = (Math.random() - 0.5) * 20;
+                const velocityY = (Math.random() - 0.5) * 20;
+    
+                img.style.left = `${randomX}px`;
+                img.style.top = `${randomY}px`;
+    
+                img.dataset.velocityX = velocityX;
+                img.dataset.velocityY = velocityY;
+            });
+    
+            // 애니메이션 실행
+            let animationStartTime = Date.now();
+            const animationDuration = 3000; // 3초
+    
+            function animate() {
+                const elapsedTime = Date.now() - animationStartTime;
+    
+                // 남은 시간을 기준으로 감쇠 계수를 점진적으로 줄임
+                const progress = elapsedTime / animationDuration; // 0에서 1 사이의 값
+                const dampingFactor = 1 - Math.min(progress, 1); // 초기에는 1, 끝에는 0
+    
+                if (progress >= 1) {
+                    return; // 3초 후 종료
+                }
+    
+                images.forEach((img, index) => {
+                    const velocityX = parseFloat(img.dataset.velocityX);
+                    const velocityY = parseFloat(img.dataset.velocityY);
+                    let currentX = parseFloat(img.style.left);
+                    let currentY = parseFloat(img.style.top);
+    
+                    // 속도 감소
+                    const newVelocityX = velocityX * dampingFactor;
+                    const newVelocityY = velocityY * dampingFactor;
+    
+                    currentX += newVelocityX;
+                    currentY += newVelocityY;
+    
+                    // 화면 경계를 벗어나지 않게 조정
+                    if (currentX <= 0) {
+                        currentX = 0; // 왼쪽 경계
+                        img.dataset.velocityX = -newVelocityX;
+                    } else if (currentX >= window.innerWidth - 300) {
+                        currentX = window.innerWidth - 300; // 오른쪽 경계
+                        img.dataset.velocityX = -newVelocityX;
+                    }
+    
+                    if (currentY <= 0) {
+                        currentY = 0; // 상단 경계
+                        img.dataset.velocityY = -newVelocityY;
+                    } else if (currentY >= window.innerHeight - 300) {
+                        currentY = window.innerHeight - 300; // 하단 경계
+                        img.dataset.velocityY = -newVelocityY;
+                    }
+    
+                    img.style.left = `${currentX}px`;
+                    img.style.top = `${currentY}px`;
+    
+                    // 밀어내기 효과 (다른 이미지들과 충돌 처리)
+                    images.forEach((otherImg, otherIndex) => {
+                        if (index === otherIndex) return; // 자기 자신은 스킵
+    
+                        const otherX = parseFloat(otherImg.style.left);
+                        const otherY = parseFloat(otherImg.style.top);
+    
+                        const dx = otherX - currentX;
+                        const dy = otherY - currentY;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+    
+                        if (distance < 300) { // 최소 거리 300px 이하인 경우 밀어냄
+                            const overlap = 300 - distance;
+                            const adjustX = (dx / distance) * overlap;
+                            const adjustY = (dy / distance) * overlap;
+    
+                            img.style.left = `${currentX - adjustX / 2}px`;
+                            img.style.top = `${currentY - adjustY / 2}px`;
+    
+                            otherImg.style.left = `${otherX + adjustX / 2}px`;
+                            otherImg.style.top = `${otherY + adjustY / 2}px`;
+                        }
+                    });
+                });
+    
+                requestAnimationFrame(animate);
+            }
+    
+            animate();
+        });
+    
+        // 이미지 클릭 이벤트 추가 (상세 페이지 이동)
+        images.forEach((img, index) => {
+            img.addEventListener('click', () => {
+                window.location.href = `detail${index + 1}.html`; // detail1.html, detail2.html, ...
+            });
+        });
+    </script>
+</body>
+</html>

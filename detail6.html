@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reactive Radar</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #1a1a1a;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        .button-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+        }
+
+        .back-button, .refresh-button {
+            padding: 10px 20px;
+            font-size: 2rem;
+            background-color: #ffcbe4;
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 70px; /* 둥근 버튼 */
+            width: 70px;
+            height: 70;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .back-button:hover, .refresh-button:hover {
+            background-color: #ff2990;
+        }
+
+        .refresh-button {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <a href="index.html" class="back-button">←</a>
+        <button class="refresh-button" onclick="location.reload();">⟳</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <script>
+        let circles = [];
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            noFill();
+        }
+
+        function draw() {
+            background(26, 26, 26, 50); // 반투명 배경
+            stroke(255, 100);
+
+            for (let i = circles.length - 1; i >= 0; i--) {
+                let c = circles[i];
+                ellipse(c.x, c.y, c.size);
+                c.size += 2;
+
+                if (c.size > width) {
+                    circles.splice(i, 1);
+                }
+            }
+        }
+
+        function mouseMoved() {
+            circles.push({ x: mouseX, y: mouseY, size: 10 });
+        }
+    </script>
+</body>
+</html>

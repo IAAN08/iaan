@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Camera Hearts</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 1rem;
+            color: #e83a8e;
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        canvas {
+            margin-top: 1rem;
+            border: 2px solid #ffffff;
+        }
+
+        .back-button {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            font-size: 1.5rem;
+            background-color: #9ba3ff;
+            color: rgb(0, 0, 0);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: #297fff;
+        }
+    </style>
+</head>
+<body>
+    <h1>Take a picture with a heart!</h1>
+    <p>Click anywhere to fill the screen with hearts!</p>
+
+    <!-- p5.js 캔버스 -->
+    <div id="p5-canvas"></div>
+
+    <a href="index.html" class="back-button">BACK</a>
+
+    <!-- p5.js 라이브러리 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+
+    <!-- p5.js 코드 -->
+    <script>
+        let video;
+        let hearts = []; // 하트를 저장할 배열
+
+        function setup() {
+            // 캔버스와 카메라 설정
+            let canvas = createCanvas(640, 480);
+            canvas.parent('p5-canvas'); // 캔버스를 특정 div에 연결
+
+            video = createCapture(VIDEO); // 카메라 캡처 활성화
+            video.size(640, 480); // 비디오 크기 설정
+            video.hide(); // 비디오 엘리먼트를 숨김
+
+            background(0); // 초기 배경을 검은색으로 설정
+        }
+
+        function draw() {
+            // 카메라 영상을 화면에 표시
+            image(video, 0, 0, width, height);
+
+            // 하트를 배열에 따라 그리기
+            for (let heart of hearts) {
+                drawHeart(heart.x, heart.y, heart.size, heart.color);
+            }
+        }
+
+        function mousePressed() {
+            // 클릭한 위치에 하트 추가
+            let newHeart = {
+                x: mouseX,
+                y: mouseY,
+                size: random(20, 60), // 하트 크기 랜덤 설정
+                color: [random(255), random(200, 255), random(200, 255)] // 하트 색상 랜덤 설정
+            };
+            hearts.push(newHeart); // 하트를 배열에 저장
+        }
+
+        function drawHeart(x, y, size, color) {
+            // 하트 색상 및 스타일 설정
+            fill(color[0], color[1], color[2], 200);
+            noStroke();
+
+            // 하트 모양 그리기
+            beginShape();
+            vertex(x, y);
+            bezierVertex(x - size / 2, y - size / 3, x - size / 2, y - size, x, y - size / 1.5); // 왼쪽 커브
+            bezierVertex(x + size / 2, y - size, x + size / 2, y - size / 3, x, y); // 오른쪽 커브
+            endShape(CLOSE);
+        }
+    </script>
+</body>
+</html>
